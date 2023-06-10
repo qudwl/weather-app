@@ -4,9 +4,44 @@
 <head>
     <meta charset="utf-8" />
     <title>Weather App</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
+    <main>
+        <div class="top-bar">
+            <p class="location">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="1.5em" height="1.5em" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+
+
+
+                <span id="city"></span>
+            </p>
+            <p class="date" id="date">
+            </p>
+        </div>
+        <div class="weather-box">
+            <p class="temp" id="temp">
+            </p>
+            <div class="weather" id="weather">
+                <p class="wind">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-wind" viewBox="0 0 16 16">
+                        <path
+                            d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z" />
+                    </svg>
+                    <span id="wind">
+
+                    </span>
+                </p>
+            </div>
+        </div>
+    </main>
     <script src="bundle.js"></script>
 </body>
 
