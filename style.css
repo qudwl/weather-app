@@ -1,5 +1,5 @@
 body {
-    background-color: #fff;
+    background-color: #f2f2f2;
     color: #333;
     font-size: 1.2em;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
@@ -24,8 +24,8 @@ main {
     backdrop-filter: blur(10px); /* Adjust the blur radius as needed */
     border-radius: 20px;
     padding: 10px 20px;
-    margin: 20px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin: 20px auto;
+    box-shadow: 0 48px 100px rgba(17, 12, 46, 0.15);
 }
 
 .top-bar {
@@ -69,4 +69,30 @@ i {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.flex-row div {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 50px;
+}
+
+button {
+    background: none;
+    padding: 15px;
+    border: none;
+    font-size: 1rem;
+}
+
+.active {
+    background: white;
+    border-radius: 30px;
+    font-weight: bold;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
