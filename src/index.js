@@ -2,7 +2,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import weathercodes from "./weathercodes";
 const apiUrl = {
     weather:
-        "https://api.open-meteo.com/v1/forecast?&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,rain,snowfall,weathercode,is_day&timezone=auto",
+        "https://api.open-meteo.com/v1/forecast?&current=temperature_2m,relative_humidity_2m,is_day,precipitation,showers,snowfall,weather_code,wind_speed_10m&timezone=auto",
     geocoding: "https://nominatim.openstreetmap.org/reverse?",
 };
 
@@ -111,6 +111,7 @@ function generateColor(timeOfDay, temperature, humidity, isSnowingOrRaining) {
  * @returns {void}
  */
 function addDataToDOM(weatherData, locationData) {
+    console.log(weatherData.current);
     const weather = document.getElementById("weather");
     const weather_code = document.getElementById("weather-code");
     const temperature = document.getElementById("temp");
@@ -121,21 +122,19 @@ function addDataToDOM(weatherData, locationData) {
     const date = document.getElementById("date");
 
     const currentHumidity =
-        weatherData.hourly.relativehumidity_2m[
-            weatherData.hourly.time.indexOf(weatherData.current_weather.time)
-        ];
-
+        weatherData.current.relative_humidity_2m;
     weather_code.innerText =
-        weathercodes[weatherData.current_weather.weathercode].day.description;
+        weathercodes[parseInt(weatherData.current.weather_code)]["day"]["description"];
 
-    city.innerText = locationData.city;
+    city.innerText = locationData.city ? locationData.city : locationData.town;
     date.innerText = new Date().toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
     });
-    temperature.innerText = weatherData.current_weather.temperature + "°";
-    wind.innerText = weatherData.current_weather.windspeed + " km/h";
+    const tempUnit = localStorage.getItem("temperatureUnit");
+    temperature.innerText = (tempUnit === "celsius" ? weatherData.current.temperature_2m : (weatherData.current.temperature_2m * 9 / 5 + 32)) + "°";
+    wind.innerText = weatherData.current.wind_speed_10m + " km/h";
     humidity.innerText = currentHumidity + "%";
     humidityIcon.classList.add(
         parseInt(currentHumidity) > 75
@@ -162,23 +161,34 @@ async function main() {
     const locationData = await getLocationData(location);
     const color = generateColor(
         new Date(),
-        weatherData.current_weather.temperature,
-        weatherData.hourly.relativehumidity_2m[
-            weatherData.hourly.time.indexOf(weatherData.current_weather.time)
-        ],
-        weatherData.hourly.rain[
-            weatherData.hourly.time.indexOf(weatherData.current_weather.time)
-        ] == 1 ||
-            weatherData.hourly.snowfall[
-                weatherData.hourly.time.indexOf(
-                    weatherData.current_weather.time
-                )
-            ] == 1
+        weatherData.current.temperature,
+        weatherData.current.relativehumidity_2m,
+        weatherData.current.rain == 1 ||
+            weatherData.current.snowfall == 1
     );
     console.log(color);
     // document.body.style.backgroundColor = color;
+    const tempUnit = localStorage.getItem("temperatureUnit");
+    if (localStorage.getItem("temperatureUnit") == null) {
+        localStorage.setItem("temperatureUnit", "celsius");
+        document.querySelector("#celsius").classList.add("active");
+    } else {
+        document.querySelector("#" + tempUnit).classList.add("active");
+    }
 
     addDataToDOM(weatherData, locationData);
 }
 
+const changeTemperatureUnit = (unit) => {
+    localStorage.setItem("temperatureUnit", unit);
+    for(let node of document.querySelector(".switch").childNodes) {
+        if (node.nodeType === Node.ELEMENT_NODE) node.classList.remove("active");
+    }
+    document.querySelector("#" + unit).classList.add("active");
+    main();
+}
+
 window.onload = main;
+document.querySelector("#celsius").addEventListener("click", () => changeTemperatureUnit("celsius"));
+document.querySelector("#fahrenheit").addEventListener("click", () => changeTemperatureUnit("fahrenheit"));
+document.querySelector("#refresh").addEventListener("click", main);
